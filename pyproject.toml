@@ -1,0 +1,25 @@
+[project]
+name = "jan-mayen-pnn"
+version = "0.1.0"
+description = "Weather phenomenon prediction using a hybrid Probabilistic Neural Network (PNN) and XGBoost model, incorporating Bayesian classification and measurement uncertainty analysis on NOAA meteorological data."
+authors = [
+    {name = "rusakpiotr", email = "rusakpiotr@proton.me"},
+]
+dependencies = ["click>=8.5.0"]
+requires-python = ">=3.14"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
+jan-mayen-pnn = "jan_mayen_pnn.main:cli"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.scripts]
+start = "jan-mayen-pnn"

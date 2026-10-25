@@ -35,14 +35,48 @@ queries = {
             "sources": STATION,
             "referencetime": "2025-01-01/2025-01-02",
             "elements": (
-                "air_temperature,"
-                "wind_speed,"
-                "wind_from_direction,"
-                "surface_air_pressure,"
+                "air_pressure,"
                 "relative_humidity,"
+                "air_temperature,"
+                "visibility_in_air_poorest_direction,"
+                "wind_speed,"
                 "weather_type",
-                "cloud_base"
             )
+        }
+    ),
+    "air_pressure_element": (
+        "/elements/v0.jsonld",
+        {
+            "ids": "air_pressure",
+            "lang": "en-US"
+        }
+    ),
+    "relative_humidity_element": (
+        "/elements/v0.jsonld",
+        {
+            "ids": "relative_humidity",
+            "lang": "en-US"
+        }
+    ),
+    "air_temperature_element": (
+        "/elements/v0.jsonld",
+        {
+            "ids": "air_temperature",
+            "lang": "en-US"
+        }
+    ),
+    "visibility_in_air_poorest_direction_element": (
+        "/elements/v0.jsonld",
+        {
+            "ids": "visibility_in_air_poorest_direction",
+            "lang": "en-US"
+        }
+    ),
+    "wind_speed_element": (
+        "/elements/v0.jsonld",
+        {
+            "ids": "wind_speed",
+            "lang": "en-US"
         }
     ),
     "weather_element": (

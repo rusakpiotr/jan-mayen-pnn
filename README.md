@@ -1,8 +1,8 @@
 # Dataset description
 
-Data from NOAA meteorogical station, located on Jan Mayen. Jan Mayen is Norway's island between iceland and greenland. There are no causal inhibitants, only scientists and military.
+Data from meteorogical station, located on Jan Mayen. Jan Mayen is Norway's island on north-east direction from Iceland. There are no causal inhibitants, only scientists and military.
 
-Data is really scrupulous and detailed, registered and shared daily since 2015. Best way to get insight is describing features.
+Data is really scrupulous and detailed. Best way to get insight is describing features.
 
 ## Features
 
@@ -11,9 +11,70 @@ All of features are detailed here:
 https://frost.met.no/elementtable?utm_source=chatgpt.com
 ```
 
-### Features we will use
+Hint, sort records by category.
 
-TODO
+Categories:
+
+- Athmospheric pressure
+- Clouds
+- Evaporation
+- Humidity
+- Icing
+- Metadata
+- Ocean waves
+- Operation
+- Precipitation
+- Radiation
+- Sea ice
+- Sea water
+- Snow and state of ground
+- Sunshine
+- Temperature
+- Vegetation
+- Visibility
+- Water level
+- Weather
+- Wind
+
+For the sake of simplicity (and mental health), we will use only few of them:
+
+- Athmospheric pressure
+- Clouds
+- Humidity
+- Temperature
+- Visibility
+- Wind
+
+### Exact features
+
+- air_pressure
+<!-- - cloud_base_height -->
+<!-- - cloud_area_fraction -->
+<!-- - dew_point_height_estimated -->
+<!-- - dew_point_temperature -->
+- relative_humidity
+<!-- - latitude -->
+<!-- - longtitude -->
+<!-- - road_friction -->
+<!-- - surface_snow_thickness -->
+- air_temperature
+<!-- - soil_temperature -->
+<!-- - surface_temperature -->
+- visibility_in_air_poorest_direction
+- wind_speed
+<!-- - wind_from_direction -->
+
+### Target variables
+
+Because, we want to make a classifier, our first goal is to predict:
+
+- weather_type
+
+Its scale is described in:
+
+```
+dataset/weather_type_code_table.json
+```
 
 ## Measurement errors
 
@@ -38,6 +99,37 @@ https://frost.met.no/dataclarifications.html?utm_source=chatgpt.com
 ```
 
 Fortunatelly, sensors on Jan Mayen station have C category, so I assume its enough to use WMO/CIMO uncertainities.
+
+Uncertainities can be found at:
+```
+https://community.wmo.int/site/knowledge-hub/programmes-and-initiatives/instruments-and-methods-of-observation-programme-imop/guide-instruments-and-methods-of-observation-wmo-no-8?utm_source=chatgpt.com
+```
+
+And uncertainities of features used in PNN will be typed into config.yml.
+
+## What is PNN
+
+Its a neural network that has 4 layers:
+- input layer
+- probabilistic layer
+- agregation layer
+- decisive layer
+
+Input layer is obvious.
+
+Probabilistic layer computes similarity of input with each record.
+
+Obviously data in input layer and data used in probabilistic layer creation is normalised.
+
+Agregation layer calculates avarage neuron activation for each target variable.
+
+Decisive layer is a classifier, that uses output of agregation layer as input and returns prediction.
+
+How to use uncertainities here?
+
+Using each record and uncertainities, we calculate gauss funciton, and then sample in certain amount of times. And than we create additional neurons in probabilistic layer.
+
+In agregation layer, we calculate probability of occurance targer variable.
 
 ## Probabilistic layer structure
 

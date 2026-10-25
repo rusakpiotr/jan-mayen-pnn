@@ -1,1 +1,7 @@
 client_id: NULL
+station: NULL
+uncertainities:
+  air_pressure: NULL
+  relative_humidity: NULL
+  air_temperature: NULL
+  visibility_in_air_poorest_direction: NULL 

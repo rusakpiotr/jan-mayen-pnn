@@ -76,6 +76,8 @@ Its scale is described in:
 dataset/weather_type_code_table.json
 ```
 
+On Jan Mayen weather_type was registered at 6:00, 9:00, 12:00 and 15:00, giving us 365 * 4 = 1460 records each year.
+
 ## Measurement errors
 
 One does not simply to get Jan Mayen measurements uncertainity. Its available through Frost API. Official MET's Norway API.

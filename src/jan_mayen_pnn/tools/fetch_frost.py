@@ -22,26 +22,29 @@ base = "https://frost.met.no"
 out = ROOT / "dataset"
 out.mkdir(parents=True, exist_ok=True)
 
-queries = {
+HOURS = [
+    "6:00",
+    "9:00",
+    "12:00",
+    "15:00"
+]
+
+def observation_template(referancetime: str, *args):
+    temp = ",".join(args)
+    return (
+        "/observations/v0.jsonld",
+        {
+            "sources": STATION,
+            "referencetime": referancetime,
+            "elements": temp
+        }
+    )
+
+metadata_queries = {
     "station_metadata": (
         "/sources/v0.jsonld",
         {
             "ids": STATION
-        }
-    ),
-    "observations": (
-        "/observations/v0.jsonld",
-        {
-            "sources": STATION,
-            "referencetime": "2025-01-01/2025-01-02",
-            "elements": (
-                "air_pressure,"
-                "relative_humidity,"
-                "air_temperature,"
-                "visibility_in_air_poorest_direction,"
-                "wind_speed,"
-                "weather_type",
-            )
         }
     ),
     "air_pressure_element": (
@@ -95,7 +98,7 @@ queries = {
     ),
 }
 
-for name, (path, params) in queries.items():
+for name, (path, params) in metadata_queries.items():
     response = session.get(
         base + path,
         params=params,
@@ -109,9 +112,46 @@ for name, (path, params) in queries.items():
 
         (out / f"{name}.json").write_text(
             json.dumps(data, indent=2, ensure_ascii=False),
-            encoding="utf-8"
+            encoding="utf-8",
         )
 
         print("Records:", len(data.get("data", [])))
     else:
         print(response.text[:500])
+
+observations_queries = dict()
+for i, hour in enumerate(HOURS):
+    observations_queries[str(i)] = observation_template(
+        f"R2/2025-01-01T{hour}/2025-06-30T{hour}/P1D",
+        "air_temperature",
+        "relative_humidity",
+        "visibility_in_air_poorest_direction",
+        "weather_type"
+    )
+
+temp = None
+for name, (path, params) in observations_queries.items():
+    response = session.get(
+        base + path,
+        params=params,
+        timeout=30
+    )
+
+    print(name, response.status_code)
+
+    if response.ok:
+        data = response.json()
+        if temp == None:
+            temp = data
+        else:
+            if type(data["data"]) != list:
+                temp["data"].append(data["data"])
+            else:
+                temp["data"].extend(data["data"])
+
+        print("Records:", len(data.get("data", [])))
+    else:
+        print(response.text[:500])
+
+with open((out / "observations.json"), "w") as f:
+    f.write(json.dumps(temp, indent=2, ensure_ascii=False))
